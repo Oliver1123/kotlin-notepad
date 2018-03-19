@@ -6,7 +6,6 @@ import android.os.Looper
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.udacity.notepad.R
 import com.udacity.notepad.data.DataStore
 import com.udacity.notepad.data.Note
@@ -15,6 +14,7 @@ import kotlinx.android.synthetic.main.item_note.view.*
 import java.util.*
 
 class NotesAdapter(private val context: Context) : RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
+
     private var notes: List<Note> = ArrayList()
     private var isRefreshing = false
 
@@ -40,8 +40,8 @@ class NotesAdapter(private val context: Context) : RecyclerView.Adapter<NotesAda
     }
 
     override fun onBindViewHolder(holder: NotesViewHolder, position: Int) {
-        val (_, text) = notes[position]
-        holder.text.text = text
+        val note = notes[position]
+        holder.text.text = note.text
     }
 
     fun refresh() {
@@ -58,7 +58,6 @@ class NotesAdapter(private val context: Context) : RecyclerView.Adapter<NotesAda
     }
 
     class NotesViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        var text: TextView = itemView.text
+        val text = itemView.text
     }
 }

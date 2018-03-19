@@ -29,12 +29,12 @@ class NoteDatabase(context: Context) {
 
     fun loadAllByIds(vararg ids: Int): List<Note> {
         val questionMarks = ids.joinToString(", ") { "?" }
-        val args = ids.map { it.toString() }
+        val args = ids.map { it.toString() }.toTypedArray()
 
         val selection = "$_ID IN ($questionMarks)"
         val cursor = helper.readableDatabase.query(_TABLE_NAME, null,
                 selection,
-                args.toTypedArray(),
+                args,
                 null,
                 null,
                 CREATED_AT)
@@ -42,11 +42,9 @@ class NoteDatabase(context: Context) {
     }
 
     fun insert(vararg notes: Note) {
-        val values = fromNotes(notes)
-        val db = helper.writableDatabase
-        db.transaction {
-            for (value in values) {
-               insert(_TABLE_NAME, null, value)
+        helper.writableDatabase.transaction {
+            fromNotes(notes).forEach {
+                insert(_TABLE_NAME, null, it)
             }
         }
     }
@@ -56,13 +54,13 @@ class NoteDatabase(context: Context) {
         helper.writableDatabase.update(_TABLE_NAME,
                 values,
                 "$_ID = ?",
-                arrayOf(Integer.toString(note.id)))
+                arrayOf("${note.id}"))
     }
 
     fun delete(note: Note) {
         helper.writableDatabase.delete(_TABLE_NAME,
                 "$_ID = ?",
-                arrayOf(Integer.toString(note.id)))
+                arrayOf("${note.id}"))
     }
 
     private fun fromCursor(cursor: Cursor): Note {
@@ -77,7 +75,7 @@ class NoteDatabase(context: Context) {
     }
 
     private fun allFromCursor(cursor: Cursor): List<Note> {
-        val retval = ArrayList<Note>()
+        val retval = mutableListOf<Note>()
         while (cursor.moveToNext()) {
             retval.add(fromCursor(cursor))
         }
@@ -98,10 +96,6 @@ class NoteDatabase(context: Context) {
     }
 
     private fun fromNotes(notes: Array<out Note>): List<ContentValues> {
-        val values = ArrayList<ContentValues>()
-        for (note in notes) {
-            values.add(fromNote(note))
-        }
-        return values
+        return notes.map(this::fromNote)
     }
 }

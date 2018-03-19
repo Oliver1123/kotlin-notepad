@@ -8,13 +8,14 @@ import com.udacity.notepad.data.NotesContract.NoteTable._ID
 import com.udacity.notepad.data.NotesContract.NoteTable._TABLE_NAME
 
 object NotesContract {
+
     object NoteTable {
-       public val _ID = "_id"
-       public val _TABLE_NAME = "notes"
-       public val TEXT = "text"
-       public val IS_PINNED = "is_pinned"
-       public val CREATED_AT = "created_at"
-       public val UPDATED_AT = "updated_at"
+        val _ID = "_id"
+        val _TABLE_NAME = "notes"
+        val TEXT = "text"
+        val IS_PINNED = "is_pinned"
+        val CREATED_AT = "created_at"
+        val UPDATED_AT = "updated_at"
     }
 
     val SQL_CREATE_ENTRIES = """CREATE TABLE $_TABLE_NAME (" +
@@ -27,7 +28,5 @@ object NotesContract {
 
     val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS $_TABLE_NAME"
 
-    val SQL_QUERY_ALL =
-            "SELECT * FROM $_TABLE_NAME ORDER BY $CREATED_AT DESC"
-
+    val SQL_QUERY_ALL = "SELECT * FROM $_TABLE_NAME ORDER BY $CREATED_AT DESC"
 }
